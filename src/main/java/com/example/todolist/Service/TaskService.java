@@ -19,4 +19,14 @@ public class TaskService {
     public List<Task> getAllTask() {
         return taskRepository.findAll();
     }
+
+    @Transactional
+    public Task saveTask(String todo) {
+        return taskRepository.saveTask(todo);
+    }
+
+    @Transactional
+    public void deleteTask(Long id) {
+        taskRepository.deleteTask(id);
+    }
 }

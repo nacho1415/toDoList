@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,53 +58,43 @@
             border-radius: 5px;
             margin-bottom: 10px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .todo-item input[type="checkbox"] {
-            margin-right: 10px;
+        .todo-item span {
+            flex: 1;
         }
-        .todo-item.completed {
-            text-decoration: line-through;
-            opacity: 0.6;
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>To-Do List</h1>
-    <form class="todo-form" id="todoForm">
-        <input type="text" id="todoInput" placeholder="Add a new task">
+    <form class="todo-form" id="todoForm" action="/task/createTask" method="POST">
+        <input type="text" id="todoInput" name="todo" placeholder="Add a new task">
         <button type="submit">Add</button>
     </form>
     <ul class="todo-list" id="todoList">
         <!-- Tasks will be added here dynamically -->
+        <li th:each="task : ${tasks}" class="todo-item">
+            <span th:text="${task.todo}"></span>
+            <form class="todo-form" action="/task/deleteTask" method="POST">
+                <input type="hidden" name="taskId" th:value="${task.id}">
+                <button class="delete-button">Delete</button>
+            </form>
+        </li>
     </ul>
 </div>
-
-<script>
-    document.getElementById("todoForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        var todoInput = document.getElementById("todoInput");
-        var task = todoInput.value;
-        if (task.trim() !== "") {
-            addTask(task);
-            todoInput.value = "";
-        } else {
-            alert("Please enter a task!");
-        }
-    });
-
-    function addTask(task) {
-        var todoList = document.getElementById("todoList");
-        var listItem = document.createElement("li");
-        listItem.classList.add("todo-item");
-        var checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        var textNode = document.createTextNode(task);
-        listItem.appendChild(checkbox);
-        listItem.appendChild(textNode);
-        todoList.appendChild(listItem);
-    }
-</script>
 </body>
 </html>
